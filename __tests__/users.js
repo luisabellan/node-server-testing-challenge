@@ -42,6 +42,8 @@ describe("users integration tests", () => {
     expect(res.type).toBe("application/json");
     expect(res.body.name).toBe("Jake");
   });
+
+  // UPDATE USER
   it("UPDATE /users/:id", async () => {
     const data = {
       "name": "Viktor"
