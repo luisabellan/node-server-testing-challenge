@@ -10,7 +10,7 @@ async function update(id, data) {
 }
 
 function remove(id) {
-	return null
+	return db("users").status(204).del()
 }
 
 function find() {

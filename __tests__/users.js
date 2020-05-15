@@ -15,7 +15,7 @@ describe("users integration tests", () => {
     const res = await supertest(server).get("/users");
     expect(res.statusCode).toBe(200);
     expect(res.type).toBe("application/json");
-    expect(res.body).toHaveLength(4);
+    expect(res.body).toHaveLength(8);
     expect(res.body[0].name).toBe("Michael");
     expect(res.body[1].name).toBe("Robert");
   });
@@ -30,8 +30,11 @@ describe("users integration tests", () => {
   it("GET /users/:id (not found)", async () => {
     const res = await supertest(server).get("/users/50");
     expect(res.statusCode).toBe(404);
-  });
+    expect(res.type).toBe("application/json");
 
+  });
+  
+ //CREATE USER
   it("POST /users", async () => {
     const data = { name: "Jake" };
     const res = await supertest(server).post("/users").send(data);
