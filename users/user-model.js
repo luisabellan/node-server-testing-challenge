@@ -1,7 +1,7 @@
 const db = require("../data/config")
 
 async function create(data) {
-	const [id] = await db("hobbits").insert(data)
+	const [id] = await db("users").insert(data)
 	return findById(id)
 }
 
@@ -14,11 +14,11 @@ function remove(id) {
 }
 
 function find() {
-	return db("hobbits")
+	return db("users")
 }
 
 function findById(id) {
-	return db("hobbits")
+	return db("users")
 		.where("id", id)
 		.first()
 }
