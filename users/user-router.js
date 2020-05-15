@@ -8,7 +8,7 @@ router.get("/", async (req, res, next) => {
 
 	try {
 		res.json(users)
-	} catch(err) {
+	} catch (err) {
 		next(err)
 	}
 })
@@ -23,7 +23,7 @@ router.get("/:id", async (req, res, next) => {
 		}
 
 		res.json(users)
-	} catch(err) {
+	} catch (err) {
 		next(err)
 	}
 })
@@ -32,7 +32,7 @@ router.post("/", async (req, res, next) => {
 	try {
 		const users = await Users.create(req.body)
 		res.status(201).json(users)
-	} catch(err) {
+	} catch (err) {
 		next(err)
 	}
 })
@@ -41,9 +41,33 @@ router.delete("/:id", async (req, res, next) => {
 	try {
 		const user = await Users.findById(req.params.id)
 		res.status(204).json(user)
-	} catch(err) {
+	} catch (err) {
 		next(err)
 	}
 })
+
+// UPDATE USER
+router.put("/:id", (req, res) => {
+	if (!req.body.name) {
+		return res.status(400).json({
+			errorMessage: "Please provide name for the user.",
+		});
+	}
+
+	Users.validateUser(req.params.id)
+
+	Users.update(req.params.id, req.body)
+		.then((user) => {
+		//	console.log(res);
+
+			return res.status(200).json(user);
+		})
+		.catch((error) => {
+			console.log(error);
+			return res.status(500).json({
+				error: "The user information could not be modified.",
+			});
+		});
+});
 
 module.exports = router

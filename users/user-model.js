@@ -5,8 +5,26 @@ async function create(data) {
 	return findById(id)
 }
 
+//UPDATE USER
 async function update(id, data) {
-	return null
+	await db("users").where({id}).update(data)
+	return findById(id)
+}
+
+async function validateUser(id) {
+	const user = findById(id)
+
+		.then((user) => {
+			if (user.length === 0) {
+				return res.status(404).json({
+					message: "The user with the specified ID does not exist.",
+				});
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+
 }
 
 function remove(id) {
@@ -29,4 +47,5 @@ module.exports = {
 	remove,
 	find,
 	findById,
+	validateUser
 }

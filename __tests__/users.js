@@ -42,4 +42,13 @@ describe("users integration tests", () => {
     expect(res.type).toBe("application/json");
     expect(res.body.name).toBe("Jake");
   });
+  it("UPDATE /users/:id", async () => {
+    const data = {
+      "name": "Viktor"
+    }
+    const res = await supertest(server).put("/users/1").send(data);
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe("application/json");
+    expect(res.body.name).toBe(data.name);
+  });
 });
