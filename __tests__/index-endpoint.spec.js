@@ -1,4 +1,3 @@
-// no functions used here
 /*
 - when making a GET request to the `/` endpoint 
   the API should respond with status code 200 
