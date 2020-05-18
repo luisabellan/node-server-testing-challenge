@@ -3,7 +3,7 @@ const server = require("../index");
 const db = require("../data/config");
 
 beforeEach(async () => {
-  await db.seed.run();
+  await db("users").truncate();
 });
 
 afterAll(async () => {
@@ -11,30 +11,7 @@ afterAll(async () => {
 });
 
 describe("users integration tests", () => {
-  it("GET /users", async () => {
-    const res = await supertest(server).get("/users");
-    expect(res.statusCode).toBe(200);
-    expect(res.type).toBe("application/json");
-    expect(res.body).toHaveLength(8);
-    expect(res.body[0].name).toBe("Michael");
-    expect(res.body[1].name).toBe("Robert");
-  });
-
-  it("GET /users/:id", async () => {
-    const res = await supertest(server).get("/users/2");
-    expect(res.statusCode).toBe(200);
-    expect(res.type).toBe("application/json");
-    expect(res.body.name).toBe("Robert");
-  });
-
-  it("GET /users/:id (not found)", async () => {
-    const res = await supertest(server).get("/users/50");
-    expect(res.statusCode).toBe(404);
-    expect(res.type).toBe("application/json");
-
-  });
-  
- //CREATE USER
+  //CREATE USER
   it("POST /users", async () => {
     const data = { name: "Jake" };
     const res = await supertest(server).post("/users").send(data);
@@ -46,11 +23,48 @@ describe("users integration tests", () => {
   // UPDATE USER
   it("UPDATE /users/:id", async () => {
     const data = {
-      "name": "Viktor"
-    }
-    const res = await supertest(server).put("/users/1").send(data);
+      name: "Viktor",
+    };
+    let id = 1;
+    const result = await supertest(server).put(`/users/${id}`).send(data);
+    expect(result.status).toBe(200);
+    expect(result.type).toBe("application/json");
+  });
+
+  it("GET /users", async () => {
+    
+     let data = {
+      name: "Jake",
+    };
+
+    await db("users").insert(data);
+    const res = await supertest(server).get("/users");
     expect(res.statusCode).toBe(200);
     expect(res.type).toBe("application/json");
-    expect(res.body.name).toBe(data.name);
+    expect(res.body[0].name).toBe("Jake");
+    expect(res.body).toHaveLength(1);
+  });
+
+  it("GET /users/:id", async () => {
+    let data = {
+      name: "Paul"
+    };
+
+    await db("users").insert(data);
+
+    let id = 1;
+    let result;
+    result = await supertest(server).get(`/users/${id}`);
+
+    expect(result.body).toEqual({id: 1, name: "Paul" });
+  });
+
+  it("GET /users/:id (not found)", async () => {
+    let id = 50;
+    const expectedStatusCode = 404;
+    let res
+    res = await supertest(server).get(`/users/${id}`);
+    expect(res.status).toEqual(expectedStatusCode);
+    expect(res.type).toBe("application/json");
   });
 });

@@ -7,10 +7,18 @@
 const request = require('supertest'); // calling it "request" is a common practice
 
 const server = require('../index.js'); //
+const db = require("../data/config");
 
+beforeEach(async () => {
+  await db.seed.run();
+});
+
+afterAll(async () => {
+  await db.destroy();
+});
 describe('index.js', () => {
     // http calls made with supertest return promises, we can use async/await if desired
-    describe('index route', () => {
+   
 
         it('should return a JSON object from the index route', async () => {
             const expectedBody = { message: "Welcome to our API" };
@@ -19,6 +27,6 @@ describe('index.js', () => {
 
             expect(response.body).toEqual(expectedBody);
         });
-    })
+ 
 })
         

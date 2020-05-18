@@ -7,6 +7,14 @@
 const request = require('supertest'); // calling it "request" is a common practice
 
 const server = require('../index.js'); //
+const db = require("../data/config");
+beforeEach(async () => {
+  await db.seed.run();
+});
+
+afterAll(async () => {
+  await db.destroy();
+});
 
 describe('server.js', () => {
   // http calls made with supertest return promises, we can use async/await if desired

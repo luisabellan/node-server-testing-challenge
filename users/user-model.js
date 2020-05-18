@@ -11,8 +11,8 @@ async function update(id, data) {
 	return findById(id)
 }
 
-async function validateUser(id) {
-	const user = findById(id)
+ function validateUser(id) {
+	let user = findById(id)
 
 		.then((user) => {
 			if (user.length === 0) {
